@@ -96,6 +96,7 @@ EnvPress configures a WordPress instance based on the following environment vari
 | `SMTP_FROM_EMAIL` | From email address for outgoing mail | No change |
 | `SMTP_FROM_NAME` | From name for outgoing mail | No change |
 | `DISCUSSION_COMMENTS` | Flag to enable comments and related features | `true` |
+| `DISCUSSION_OEMBED` | Flag to enable oEmbed and related features | `true` |
 | `MARKETING_TRACKING_ROLES` | CSV of [user role slugs](https://wordpress.org/documentation/article/roles-and-capabilities/) tracking is enabled for | `guest` |
 | `MARKETING_FATHOM` | [Fathom Analytics](https://usefathom.com/) Site id | Empty |
 | `MARKETING_GTM` | [Google Tag Manager](https://marketingplatform.google.com/about/tag-manager/) Container id | Empty |

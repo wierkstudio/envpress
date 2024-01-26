@@ -63,6 +63,10 @@ class DiscussionLayer implements LayerInterface
         if (!Env::getBool('DISCUSSION_COMMENTS', true)) {
             $this->disableComments();
         }
+
+        if (!Env::getBool('DISCUSSION_OEMBED', true)) {
+            $this->disableOembed();
+        }
     }
 
     /**
@@ -97,5 +101,25 @@ class DiscussionLayer implements LayerInterface
             // Remove dashboard widget
             remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
         });
+    }
+
+    /**
+     * Disable oEmbed and related features.
+     *
+     * @return void
+     */
+    private function disableOembed(): void
+    {
+        // Remove oEmbed REST API endpoint
+        remove_action('rest_api_init', 'wp_oembed_register_route');
+
+        // Disable oEmbed link tag discovery
+        add_filter('embed_oembed_discover', '__return_false');
+
+        // Disable oEmbed discovery link tags
+        remove_action('wp_head', 'wp_oembed_add_discovery_links');
+
+        // Disable oEmbed related JavaScript from frontend and backend
+        remove_action('wp_head', 'wp_oembed_add_host_js');
     }
 }
