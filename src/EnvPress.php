@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace EnvPress;
 
 use EnvPress\Exception\InvalidDotenvException;
+use EnvPress\Layer\AdminLayer;
 use EnvPress\Layer\ConstLayer;
 use EnvPress\Layer\DebugLayer;
-use EnvPress\Layer\DiscussionLayer;
+use EnvPress\Layer\FeatureLayer;
 use EnvPress\Layer\LayerInterface;
 use EnvPress\Layer\MailLayer;
 use EnvPress\Layer\MarketingLayer;
 use EnvPress\Layer\MultisiteLayer;
 use EnvPress\Layer\SecurityLayer;
-use EnvPress\Layer\AdminLayer;
 use EnvPress\Util\Env;
 use EnvPress\Util\Plugin;
 
@@ -85,7 +85,7 @@ class EnvPress {
             DebugLayer::create(),
             SecurityLayer::create(),
             MailLayer::create(),
-            DiscussionLayer::create(),
+            FeatureLayer::create(),
             MarketingLayer::create(),
             AdminLayer::create()
         ]);

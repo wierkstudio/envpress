@@ -19,7 +19,7 @@ This package is designed to simplify the configuration process and lessen the ma
 - Outgoing mail configuration (SMTP server credentials, sender details)
 - Disable file modifications by WordPress and its built-in file editor
 - Harden WordPress: Disable XML-RPC and pingbacks, hide exact version
-- Disable comments and related features with a flag
+- Use flags to disable native WordPress features like comments or oEmbed
 
 ## Getting Started
 
@@ -58,14 +58,17 @@ EnvPress configures a WordPress instance based on the following environment vari
 
 | Environment variable | Comments | Default |
 | ----------- | ----------- | ------- |
-| `WP_HOME` | Root URL of the site | Required |
-| `WP_SITEURL` | URL of the WordPress folder | Required |
-| `WP_ENVIRONMENT_TYPE` | Environment type | `production` |
-| `WP_DEBUG` | Flag to enable debugging mode | `false` |
-| `WP_CACHE` | Flag to enable cache | `false` |
-| `WP_CRON` | Flag to enable WP Cron based on page load | `true` |
+| `WP_HOME` | [URL the WordPress instance can be reached at](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#blog-address-url) | Required |
+| `WP_SITEURL` | [URL where WordPress core files reside](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#wp-siteurl) | Required |
+| `WP_ENVIRONMENT_TYPE` | [Environment type](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#wp-environment-type) | `production` |
+| `WP_DEBUG` | Flag to enable [the reporting of some errors or warnings](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#wp-debug) | `false` |
+| `WP_CACHE` | Flag to enable [advanced-cache.php](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#cache) | `false` |
+| `WP_CRON` | Flag to enable [WP Cron based on page load](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#alternative-cron) | `true` |
 | `WP_DEFAULT_THEME` | Default WordPress theme name | No change |
 | `WP_POST_REVISIONS` | Number of [post revisions](https://wordpress.org/documentation/article/revisions/) (-1, 0, 1, 2, …) | `0` |
+| `WP_ALLOW_REPAIR` | Flag to enable [automatic database repair support](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#automatic-database-optimizing) | `false` |
+| `FEATURE_COMMENTS` | Flag to enable comments and related features | `true` |
+| `FEATURE_OEMBED` | Flag to enable oEmbed and related features | `true` |
 | `MULTISITE_ALLOW` | Flag to allow a [multisite network](https://wordpress.org/documentation/article/create-a-network/) | `false` |
 | `MULTISITE_ENABLE` | Flag to enable a multisite network, once installed | `false` |
 | `MULTISITE_TYPE` | Either `subdomains` or `subdirectories` | `subdirectories` |
@@ -78,15 +81,15 @@ EnvPress configures a WordPress instance based on the following environment vari
 | `DB_DATABASE` | MySQL database name | Required |
 | `DB_CHARSET` | MySQL database charset | `utf8mb4` |
 | `DB_COLLATE` | MySQL database collate | Empty |
-| `DB_PREFIX` | Database table prefix | `wp_` |
-| `SALT_AUTH_KEY` | Cryptographically strong and random key | `put your uniqu…` |
-| `SALT_SECURE_AUTH_KEY` | Cryptographically strong and random key | `put your uniqu…` |
-| `SALT_LOGGED_IN_KEY` | Cryptographically strong and random key | `put your uniqu…` |
-| `SALT_NONCE_KEY` | Cryptographically strong and random key | `put your uniqu…` |
-| `SALT_AUTH_SALT` | Cryptographically strong and random key | `put your uniqu…` |
-| `SALT_SECURE_AUTH_SALT` | Cryptographically strong and random key | `put your uniqu…` |
-| `SALT_LOGGED_IN_SALT` | Cryptographically strong and random key | `put your uniqu…` |
-| `SALT_NONCE_SALT` | Cryptographically strong and random key | `put your uniqu…` |
+| `DB_PREFIX` | Database [table prefix](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#table-prefix) | `wp_` |
+| `SALT_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
+| `SALT_SECURE_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
+| `SALT_LOGGED_IN_KEY` | Cryptographically strong and random key | `put your uni…` |
+| `SALT_NONCE_KEY` | Cryptographically strong and random key | `put your uni…` |
+| `SALT_AUTH_SALT` | Cryptographically strong and random key | `put your uni…` |
+| `SALT_SECURE_AUTH_SALT` | Cryptographically strong and random key | `put your uni…` |
+| `SALT_LOGGED_IN_SALT` | Cryptographically strong and random key | `put your uni…` |
+| `SALT_NONCE_SALT` | Cryptographically strong and random key | `put your uni…` |
 | `SMTP_HOSTNAME` | Hostname of the SMTP server | Empty (disabled) |
 | `SMTP_PORT` | Port of the SMTP server | `587` |
 | `SMTP_USERNAME` | SMTP user name | Empty |
@@ -95,14 +98,12 @@ EnvPress configures a WordPress instance based on the following environment vari
 | `SMTP_ENCRYPTION` | SMTP encryption | `tls` |
 | `SMTP_FROM_EMAIL` | From email address for outgoing mail | No change |
 | `SMTP_FROM_NAME` | From name for outgoing mail | No change |
-| `DISCUSSION_COMMENTS` | Flag to enable comments and related features | `true` |
-| `DISCUSSION_OEMBED` | Flag to enable oEmbed and related features | `true` |
 | `MARKETING_TRACKING_ROLES` | CSV of [user role slugs](https://wordpress.org/documentation/article/roles-and-capabilities/) tracking is enabled for | `guest` |
 | `MARKETING_FATHOM` | [Fathom Analytics](https://usefathom.com/) Site id | Empty |
 | `MARKETING_GTM` | [Google Tag Manager](https://marketingplatform.google.com/about/tag-manager/) Container id | Empty |
-| `ADMIN_SUPPORT_NAME` | Name of person/company offering support | Empty |
-| `ADMIN_SUPPORT_URL` | URL of person/company offering support | Empty |
-| `ADMIN_SHOW_ENV` | Flag to show the environment type in admin | `false` |
+| `ADMIN_SUPPORT_NAME` | Name the contact maintaining or supporting the instance | Empty |
+| `ADMIN_SUPPORT_URL` | URL the contact maintaining or supporting the instance | Empty |
+| `ADMIN_DISPLAY_ENV` | Flag to display the environment type in admin | `false` |
 | `PLUGIN_ACF_PRO_LICENSE` | License key for [ACF PRO](https://www.advancedcustomfields.com/pro/) | Empty (disabled) |
 | `ENVPRESS_TRUSTED_PROXIES` | CSV of trusted proxy addresses | Empty (disabled) |
 

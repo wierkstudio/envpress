@@ -62,9 +62,9 @@ class AdminLayer implements LayerInterface
     {
         $this->applyFooterText();
 
-        $adminBadge = Env::getBool('ADMIN_SHOW_ENV', false);
-        if ($adminBadge) {
-            $this->applyAdminBarEnvBadge();
+        $envDisplay = Env::getBool('ADMIN_DISPLAY_ENV', false);
+        if ($envDisplay) {
+            $this->applyDisplayEnv();
         }
     }
 
@@ -108,7 +108,7 @@ class AdminLayer implements LayerInterface
      *
      * @see https://developer.wordpress.org/reference/functions/wp_get_environment_type/
      */
-    private function applyAdminBarEnvBadge(): void
+    private function applyDisplayEnv(): void
     {
         $envTypeColorsMap = [
             'local' => [

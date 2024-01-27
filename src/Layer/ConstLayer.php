@@ -199,12 +199,14 @@ class ConstLayer implements LayerInterface
         // Settings
         define('WP_AUTO_UPDATE_CORE', false);
         define('AUTOMATIC_UPDATER_DISABLED', true);
-        define('DISABLE_WP_CRON', !Env::getBool('WP_CRON', true));
         define('DISALLOW_FILE_EDIT', true);
         define('DISALLOW_FILE_MODS', true);
         define('FS_METHOD', 'direct');
-        define('WP_POST_REVISIONS', Env::getInt('WP_POST_REVISIONS', 0));
         define('ALLOW_UNFILTERED_UPLOADS', false);
+
+        define('DISABLE_WP_CRON', !Env::getBool('WP_CRON', true));
+        define('WP_POST_REVISIONS', Env::getInt('WP_POST_REVISIONS', 0));
+        define('WP_ALLOW_REPAIR', Env::getBool('WP_ALLOW_REPAIR'), false);
         define('WP_CACHE', Env::getBool('WP_CACHE', false));
 
         $defaultTheme = Env::getString('WP_DEFAULT_THEME', '');

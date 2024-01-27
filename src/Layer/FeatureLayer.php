@@ -7,12 +7,12 @@ namespace EnvPress\Layer;
 use EnvPress\Util\Env;
 
 /**
- * Configure discussion related aspects of a WordPress instance.
+ * Disable native WordPress features.
  */
-class DiscussionLayer implements LayerInterface
+class FeatureLayer implements LayerInterface
 {
     /**
-     * Create a new DiscussionLayer instance.
+     * Create a new FeatureLayer instance.
      *
      * @return void
      */
@@ -22,9 +22,9 @@ class DiscussionLayer implements LayerInterface
     }
 
     /**
-     * Create a new DiscussionLayer instance.
+     * Create a new FeatureLayer instance.
      *
-     * @return DiscussionLayer
+     * @return FeatureLayer
      */
     public static function create(): self
     {
@@ -60,11 +60,11 @@ class DiscussionLayer implements LayerInterface
      */
     public function apply(): void
     {
-        if (!Env::getBool('DISCUSSION_COMMENTS', true)) {
+        if (!Env::getBool('FEATURE_COMMENTS', true)) {
             $this->disableComments();
         }
 
-        if (!Env::getBool('DISCUSSION_OEMBED', true)) {
+        if (!Env::getBool('FEATURE_OEMBED', true)) {
             $this->disableOembed();
         }
     }
