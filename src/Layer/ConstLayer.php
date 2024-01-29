@@ -205,7 +205,7 @@ class ConstLayer implements LayerInterface
         define('ALLOW_UNFILTERED_UPLOADS', false);
 
         define('DISABLE_WP_CRON', !Env::getBool('WP_CRON', true));
-        define('WP_POST_REVISIONS', Env::getInt('WP_POST_REVISIONS', 0));
+        define('WP_POST_REVISIONS', Env::getInt('WP_POST_REVISIONS', -1));
         define('WP_ALLOW_REPAIR', Env::getBool('WP_ALLOW_REPAIR'), false);
         define('WP_CACHE', Env::getBool('WP_CACHE', false));
 

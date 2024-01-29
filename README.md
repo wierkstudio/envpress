@@ -1,7 +1,7 @@
 
 # EnvPress
 
-A PHP package streamlining the configuration of modern and secure WordPress instances using environment variables.
+A PHP package streamlining the configuration of modern and secure WordPress instances using a standard set of environment variables.
 
 ## Motivation
 
@@ -12,7 +12,7 @@ This package is designed to simplify the configuration process and lessen the ma
 ## Key Features
 
 - Designed for [Composer](https://getcomposer.org/) based WordPress setups (e.g. [Bedrock](https://roots.io/bedrock/))
-- No configuration as constants in wp-config.php
+- Static wp-config.php
 - Load environment variables from .env files with [vlucas/phpdotenv](https://github.com/vlucas/phpdotenv)
 - Gather facts from trusted proxies (e.g. Load Balancers)
 - Configure [Multisite Networks](https://wordpress.org/documentation/article/create-a-network/) and [fix paths](https://core.trac.wordpress.org/ticket/36507) when installing WordPress in a custom subdirectory
@@ -54,7 +54,7 @@ This package is designed to simplify the configuration process and lessen the ma
 
 ## Environment Variables
 
-EnvPress configures a WordPress instance based on the following environment variables that can be set in the PHP pool configuration (recommended) or via a `.env` file:
+EnvPress sets up a WordPress instance using a collection of environment variables, listed in the following table. In cases where an environment variable is absent, the corresponding default value is used. These default values are carefully selected to closely resemble a standard, unmodified WordPress installation to avoid unintentional changes.
 
 | Environment variable | Comments | Default |
 | ----------- | ----------- | ------- |
@@ -65,7 +65,7 @@ EnvPress configures a WordPress instance based on the following environment vari
 | `WP_CACHE` | Flag to enable [advanced-cache.php](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#cache) | `false` |
 | `WP_CRON` | Flag to enable [WP Cron based on page load](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#alternative-cron) | `true` |
 | `WP_DEFAULT_THEME` | Default WordPress theme name | No change |
-| `WP_POST_REVISIONS` | Number of [post revisions](https://wordpress.org/documentation/article/revisions/) (-1, 0, 1, 2, …) | `0` |
+| `WP_POST_REVISIONS` | Number of [post revisions](https://wordpress.org/documentation/article/revisions/) (-1, 0, 1, 2, …) | `-1` |
 | `WP_ALLOW_REPAIR` | Flag to enable [automatic database repair support](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#automatic-database-optimizing) | `false` |
 | `FEATURE_COMMENTS` | Flag to enable comments and related features | `true` |
 | `FEATURE_OEMBED` | Flag to enable oEmbed and related features | `true` |
