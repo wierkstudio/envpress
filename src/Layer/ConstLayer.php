@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace EnvPress\Layer;
 
+use EnvPress\Exception\InvalidEnvVarException;
+use EnvPress\Exception\UnsupportedSchemeException;
 use EnvPress\Util\Env;
 
 /**
@@ -142,18 +144,37 @@ class ConstLayer implements LayerInterface
     private function applyDatabaseConfig(): void
     {
         global $table_prefix;
+        $table_prefix = Env::getString('DATABASE_PREFIX', 'wp_');
 
-        $hostname = Env::getString('DB_HOSTNAME', '127.0.0.1');
-        $port = Env::getInt('DB_PORT', 3306);
+        define('DB_CHARSET', Env::getString('DATABASE_CHARSET', 'utf8mb4'));
+        define('DB_COLLATE', Env::getString('DATABASE_COLLATE', ''));
 
-        define('DB_HOST',     $hostname . ':' . $port);
-        define('DB_USER',     Env::getString('DB_USERNAME'));
-        define('DB_PASSWORD', Env::getString('DB_PASSWORD'));
-        define('DB_NAME',     Env::getString('DB_DATABASE'));
-        define('DB_CHARSET',  Env::getString('DB_CHARSET', 'utf8mb4'));
-        define('DB_COLLATE',  Env::getString('DB_COLLATE', ''));
+        // Configure the database using the given URL
+        $databaseResource = Env::getURL('DATABASE_URL');
+        if ($databaseResource === null) {
+            throw new InvalidEnvVarException(
+                'Env var DATABASE_URL is required'
+            );
+        }
+        if ($databaseResource['scheme'] !== 'mysql') {
+            throw new UnsupportedSchemeException(
+                "Unsupported database scheme '{$databaseResource['scheme']}'"
+            );
+        }
 
-        $table_prefix = Env::getString('DB_PREFIX', 'wp_');
+        $hostString = $databaseResource['port']
+            ? $databaseResource['hostName'] . ':' . $databaseResource['port']
+            : $databaseResource['hostName'];
+
+        define('DB_HOST', $hostString);
+        define('DB_NAME', substr($databaseResource['path'], 1));
+        define('DB_USER', $databaseResource['userName']);
+        define('DB_PASSWORD', $databaseResource['password'] ?: null);
+
+        $sslMode = strtolower($databaseResource['query']['ssl-mode'] ?? '');
+        if ($sslMode === 'required') {
+            define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);
+        }
     }
 
     /**

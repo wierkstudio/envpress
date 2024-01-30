@@ -6,7 +6,7 @@ namespace EnvPress\Exception;
 
 use RuntimeException;
 
-final class UnexpectedEnvVarTypeException extends RuntimeException implements ExceptionInterface
+final class UnsupportedSchemeException extends RuntimeException implements ExceptionInterface
 {
     //
 }

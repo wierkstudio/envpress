@@ -3,23 +3,22 @@
 
 A PHP package streamlining the configuration of modern and secure WordPress instances using a standard set of environment variables.
 
-## Motivation
-
-The standard setup of WordPress involves maintaining a wp-config.php file for setting basic configuration options, such as paths, the database connection, and security salts. Except for the actual configuration values, the source code of this file is repeated for each instance with little to no variation. Other common configurations, such as SMTP server credentials and disabling XML-RPC, must be handled separately, far away from wp-config.php, in a custom (child) theme or using multiple third-party plugins.
-
-This package is designed to simplify the configuration process and lessen the maintenance workload for the majority of WordPress instances. It relies on a standard set of environment variables (see list below), rather than boilerplate PHP code, to configure an instance.
-
 ## Key Features
 
 - Designed for [Composer](https://getcomposer.org/) based WordPress setups (e.g. [Bedrock](https://roots.io/bedrock/))
 - Static wp-config.php
 - Load environment variables from .env files with [vlucas/phpdotenv](https://github.com/vlucas/phpdotenv)
 - Gather facts from trusted proxies (e.g. Load Balancers)
-- Configure [Multisite Networks](https://wordpress.org/documentation/article/create-a-network/) and [fix paths](https://core.trac.wordpress.org/ticket/36507) when installing WordPress in a custom subdirectory
-- Outgoing mail configuration (SMTP server credentials, sender details)
-- Disable file modifications by WordPress and its built-in file editor
-- Harden WordPress: Disable XML-RPC and pingbacks, hide exact version
-- Use flags to disable native WordPress features like comments or oEmbed
+- Attach [backing services](https://www.12factor.net/backing-services) using URLs (e.g. MySQL, SMTP)
+- Configure [Multisite Networks](https://wordpress.org/documentation/article/create-a-network/) using environment variables
+- Use feature flags to disable native WordPress features (e.g. comments, oEmbed)
+- Harden WordPress: Disable file modifications, XML-RPC, and pingbacks, hide exact version
+
+## Motivation
+
+The standard setup of WordPress involves maintaining a wp-config.php file for setting basic configuration options, such as paths, the database connection, and security salts. Except for the actual configuration values, the source code of this file is repeated for each instance with little to no variation. Other common configurations, such as SMTP server credentials and disabling XML-RPC, must be handled separately, far away from wp-config.php, in a custom (child) theme or using multiple third-party plugins.
+
+This package is designed to simplify the configuration process and lessen the maintenance workload for the majority of WordPress instances. It relies on a standard set of environment variables (see list below), rather than boilerplate PHP code, to configure an instance.
 
 ## Getting Started
 
@@ -64,7 +63,7 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `WP_DEBUG` | Flag to enable [the reporting of some errors or warnings](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#wp-debug) | `false` |
 | `WP_CACHE` | Flag to enable [advanced-cache.php](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#cache) | `false` |
 | `WP_CRON` | Flag to enable [WP Cron based on page load](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#alternative-cron) | `true` |
-| `WP_DEFAULT_THEME` | Default WordPress theme name | No change |
+| `WP_DEFAULT_THEME` | Default WordPress theme name | WordPress default |
 | `WP_POST_REVISIONS` | Number of [post revisions](https://wordpress.org/documentation/article/revisions/) (-1, 0, 1, 2, …) | `-1` |
 | `WP_ALLOW_REPAIR` | Flag to enable [automatic database repair support](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#automatic-database-optimizing) | `false` |
 | `FEATURE_COMMENTS` | Flag to enable comments and related features | `true` |
@@ -74,14 +73,13 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `MULTISITE_TYPE` | Either `subdomains` or `subdirectories` | `subdirectories` |
 | `MULTISITE_DOMAIN` | Value of `DOMAIN_CURRENT_SITE` | Required for MS |
 | `MULTISITE_PATH` | Value of `PATH_CURRENT_SITE` | Required for MS |
-| `DB_HOSTNAME` | Hostname of the MySQL server | `127.0.0.1` |
-| `DB_PORT` | Port of the MySQL server | `3306` |
-| `DB_USERNAME` | MySQL user name | Required |
-| `DB_PASSWORD` | MySQL password | Required |
-| `DB_DATABASE` | MySQL database name | Required |
-| `DB_CHARSET` | MySQL database charset | `utf8mb4` |
-| `DB_COLLATE` | MySQL database collate | Empty |
-| `DB_PREFIX` | Database [table prefix](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#table-prefix) | `wp_` |
+| `DATABASE_URL` | MySQL server URL (see below) | Required |
+| `DATABASE_CHARSET` | Database [character set](https://wordpress.org/documentation/article/wordpress-glossary/#character-set) | `utf8mb4` |
+| `DATABASE_COLLATE` | Database [collation](https://wordpress.org/documentation/article/wordpress-glossary/#collation) | Empty |
+| `DATABASE_PREFIX` | Database [table prefix](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#table-prefix) | `wp_` |
+| `MAILER_FROM_ADDRESS` | Sender email address (may be set in `MAILER_URL`) | WordPress default |
+| `MAILER_FROM_NAME` | Sender name | WordPress default |
+| `MAILER_URL` | SMTP server URL for outgoing mail (see below) | WordPress default |
 | `SALT_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_SECURE_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_LOGGED_IN_KEY` | Cryptographically strong and random key | `put your uni…` |
@@ -90,23 +88,42 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `SALT_SECURE_AUTH_SALT` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_LOGGED_IN_SALT` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_NONCE_SALT` | Cryptographically strong and random key | `put your uni…` |
-| `SMTP_HOSTNAME` | Hostname of the SMTP server | Empty (disabled) |
-| `SMTP_PORT` | Port of the SMTP server | `587` |
-| `SMTP_USERNAME` | SMTP user name | Empty |
-| `SMTP_PASSWORD` | SMTP password | Empty |
-| `SMTP_AUTH` | Whether to authenticate to the SMTP server | `true` |
-| `SMTP_ENCRYPTION` | SMTP encryption | `tls` |
-| `SMTP_FROM_EMAIL` | From email address for outgoing mail | No change |
-| `SMTP_FROM_NAME` | From name for outgoing mail | No change |
 | `MARKETING_TRACKING_ROLES` | CSV of [user role slugs](https://wordpress.org/documentation/article/roles-and-capabilities/) tracking is enabled for | `guest` |
 | `MARKETING_FATHOM` | [Fathom Analytics](https://usefathom.com/) Site id | Empty |
 | `MARKETING_GTM` | [Google Tag Manager](https://marketingplatform.google.com/about/tag-manager/) Container id | Empty |
-| `ADMIN_SUPPORT_NAME` | Name the contact maintaining or supporting the instance | Empty |
-| `ADMIN_SUPPORT_URL` | URL the contact maintaining or supporting the instance | Empty |
+| `ADMIN_SUPPORT_NAME` | Support contact name | Empty |
+| `ADMIN_SUPPORT_URL` | Support contact website URL | Empty |
 | `ADMIN_DISPLAY_ENV` | Flag to display the environment type in admin | `false` |
 | `PLUGIN_ACF_PRO_LICENSE` | License key for [ACF PRO](https://www.advancedcustomfields.com/pro/) | Empty (disabled) |
 | `ENVPRESS_TRUSTED_PROXIES` | CSV of trusted proxy addresses | Empty (disabled) |
 
+## Backing Service URLs
+
+Backing services such as databases, caching systems, or SMTP servers are attached using URLs. These URLs consolidate all the essential connection details, like host name, port, access credentials, and other relevant parameters, into a singular, manageable string.
+
+Generally, if a resource user name or password contains special characters (`$&+,/:;=?@`), they must be [URL encoded](https://en.wikipedia.org/wiki/Percent-encoding).
+
+### Database URL/DSN
+
+```ini
+DATABASE_URL=mysql://{userName}:{password}@{hostName}:{port}/{name}?ssl-mode=REQUIRED
+```
+
+Parameters:
+
+- `ssl-mode` - If set to `REQUIRED`, requires an encrypted connection and fails, if one cannot be established.
+
+### Mailer URL
+
+```ini
+MAILER_URL=smtp://{userName}:{password}@{hostName}:{port}
+```
+
+Parameters:
+
+- `encryption` - Define the encryption to use on the SMTP connection: `tls` (default) or `ssl`.
+- `from` - If present, force the from email address to a specified one. This setting overwrites `MAILER_FROM_ADDRESS`.
+
 ## Credits
 
-Created by [Wierk](https://wierk.lu/) and [contributors](https://github.com/wierkstudio/envpress/graphs/contributors). Released under the [MIT license](./LICENSE.txt).
+Created and maintained by [Wierk](https://wierk.lu/) and [contributors](https://github.com/wierkstudio/envpress/graphs/contributors). Released under the [MIT license](./LICENSE.txt).

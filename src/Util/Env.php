@@ -7,7 +7,7 @@ namespace EnvPress\Util;
 use Dotenv\Dotenv;
 use Dotenv\Exception\ExceptionInterface as DotenvExceptionInterface;
 use EnvPress\Exception\InvalidDotenvException;
-use EnvPress\Exception\UnexpectedEnvVarTypeException;
+use EnvPress\Exception\InvalidEnvVarException;
 
 /**
  * @internal
@@ -47,7 +47,7 @@ final class Env
      * @param bool $default Fallback value, if not present
      *
      * @return bool
-     * @throws UnexpectedEnvVarTypeException
+     * @throws InvalidEnvVarException
      */
     public static function getBool(string $key, bool $default = false): bool
     {
@@ -55,7 +55,7 @@ final class Env
         if (is_bool($value)) {
             return $value;
         }
-        throw new UnexpectedEnvVarTypeException(
+        throw new InvalidEnvVarException(
             "Env var {$key} is expected to contain a bool"
         );
     }
@@ -67,7 +67,7 @@ final class Env
      * @param string $default Fallback value, if not present
      *
      * @return string
-     * @throws UnexpectedEnvVarTypeException
+     * @throws InvalidEnvVarException
      */
     public static function getString(string $key, string $default = ''): string
     {
@@ -75,7 +75,7 @@ final class Env
         if (is_string($value) || is_int($value)) {
             return (string) $value;
         }
-        throw new UnexpectedEnvVarTypeException(
+        throw new InvalidEnvVarException(
             "Env var {$key} is expected to contain a string"
         );
     }
@@ -87,7 +87,7 @@ final class Env
      * @param int $default Fallback value, if not present
      *
      * @return int
-     * @throws UnexpectedEnvVarTypeException
+     * @throws InvalidEnvVarException
      */
     public static function getInt(string $key, int $default = 0): int
     {
@@ -95,8 +95,29 @@ final class Env
         if (is_int($value)) {
             return $value;
         }
-        throw new UnexpectedEnvVarTypeException(
+        throw new InvalidEnvVarException(
             "Env var {$key} is expected to contain an int"
+        );
+    }
+
+    /**
+     * Return the components of a URL environment variable.
+     *
+     * @param string $key Key of environment variable
+     *
+     * @return ?array Array with URL components or null, if empty
+     * @throws InvalidEnvVarException
+     */
+    public static function getURL(string $key): ?array
+    {
+        $value = self::get($key, '');
+        if ($value === '') {
+            return null;
+        } else if (is_string($value) && ($url = URL::parseString($value))) {
+            return $url;
+        }
+        throw new InvalidEnvVarException(
+            "Env var {$key} is expected to contain a well formatted URL"
         );
     }
 
