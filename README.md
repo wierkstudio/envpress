@@ -53,7 +53,7 @@ This package is designed to simplify the configuration process and lessen the ma
 
 ## Environment Variables
 
-EnvPress sets up a WordPress instance using a collection of environment variables, listed in the following table. In cases where an environment variable is absent, the corresponding default value is used. These default values are carefully selected to closely resemble a standard, unmodified WordPress installation to avoid unintentional changes.
+EnvPress sets up a WordPress instance using a collection of environment variables, listed in the following table. In cases where an environment variable is absent, the corresponding default value is used. These default values are selected to closely resemble a standard, unmodified WordPress installation to avoid unintentional changes.
 
 | Environment variable | Comments | Default |
 | ----------- | ----------- | ------- |
@@ -66,8 +66,6 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `WP_DEFAULT_THEME` | Default WordPress theme name | WordPress default |
 | `WP_POST_REVISIONS` | Number of [post revisions](https://wordpress.org/documentation/article/revisions/) (-1, 0, 1, 2, …) | `-1` |
 | `WP_ALLOW_REPAIR` | Flag to enable [automatic database repair support](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#automatic-database-optimizing) | `false` |
-| `FEATURE_COMMENTS` | Flag to enable comments and related features | `true` |
-| `FEATURE_OEMBED` | Flag to enable oEmbed and related features | `true` |
 | `MULTISITE_ALLOW` | Flag to allow a [multisite network](https://wordpress.org/documentation/article/create-a-network/) | `false` |
 | `MULTISITE_ENABLE` | Flag to enable a multisite network, once installed | `false` |
 | `MULTISITE_TYPE` | Either `subdomains` or `subdirectories` | `subdirectories` |
@@ -80,6 +78,11 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `MAILER_FROM_ADDRESS` | Sender email address (may be set in `MAILER_URL`) | WordPress default |
 | `MAILER_FROM_NAME` | Sender name | WordPress default |
 | `MAILER_URL` | SMTP server URL for outgoing mail (see below) | WordPress default |
+| `FEATURE_COMMENTS` | Flag to enable comments and related features | `true` |
+| `FEATURE_OEMBED` | Flag to enable oEmbed and related features | `true` |
+| `ADMIN_SUPPORT_NAME` | Support contact name | Empty |
+| `ADMIN_SUPPORT_URL` | Support contact website URL | Empty |
+| `ADMIN_DISPLAY_ENV` | Flag to display the environment type in admin | `false` |
 | `SALT_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_SECURE_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_LOGGED_IN_KEY` | Cryptographically strong and random key | `put your uni…` |
@@ -88,12 +91,8 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `SALT_SECURE_AUTH_SALT` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_LOGGED_IN_SALT` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_NONCE_SALT` | Cryptographically strong and random key | `put your uni…` |
-| `MARKETING_TRACKING_ROLES` | CSV of [user role slugs](https://wordpress.org/documentation/article/roles-and-capabilities/) tracking is enabled for | `guest` |
 | `MARKETING_FATHOM` | [Fathom Analytics](https://usefathom.com/) Site id | Empty |
 | `MARKETING_GTM` | [Google Tag Manager](https://marketingplatform.google.com/about/tag-manager/) Container id | Empty |
-| `ADMIN_SUPPORT_NAME` | Support contact name | Empty |
-| `ADMIN_SUPPORT_URL` | Support contact website URL | Empty |
-| `ADMIN_DISPLAY_ENV` | Flag to display the environment type in admin | `false` |
 | `PLUGIN_ACF_PRO_LICENSE` | License key for [ACF PRO](https://www.advancedcustomfields.com/pro/) | Empty (disabled) |
 | `ENVPRESS_TRUSTED_PROXIES` | CSV of trusted proxy addresses | Empty (disabled) |
 
@@ -101,7 +100,7 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 
 Backing services such as databases, caching systems, or SMTP servers are attached using URLs. These URLs consolidate all the essential connection details, like host name, port, access credentials, and other relevant parameters, into a singular, manageable string.
 
-Generally, if a resource user name or password contains special characters (`$&+,/:;=?@`), they must be [URL encoded](https://en.wikipedia.org/wiki/Percent-encoding).
+In URLs, if a user name or password contains special characters (`$&+,/:;=?@`), they must be [URL encoded](https://en.wikipedia.org/wiki/Percent-encoding).
 
 ### Database URL/DSN
 
@@ -122,7 +121,7 @@ MAILER_URL=smtp://{userName}:{password}@{hostName}:{port}
 Parameters:
 
 - `encryption` - Define the encryption to use on the SMTP connection: `tls` (default) or `ssl`.
-- `from` - If present, force the from email address to a specified one. This setting overwrites `MAILER_FROM_ADDRESS`.
+- `from` - If present, force the from email address to a specified one, overwriting `MAILER_FROM_ADDRESS`.
 
 ## Credits
 

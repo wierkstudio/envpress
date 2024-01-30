@@ -74,21 +74,13 @@ class MarketingLayer implements LayerInterface
     }
 
     /**
-     * Return true, if tracking is enabled for the current user (if logged in).
+     * Return true, if tracking is enabled in the current environment.
      *
      * @return bool
      */
     private function isTrackingEnabled(): bool
     {
-        $trackingRolesString =
-            Env::getString('MARKETING_TRACKING_ROLES', 'guest');
-        $trackingRoles = explode(',', $trackingRolesString);
-        $userRoles = is_user_logged_in()
-            ? wp_get_current_user()->roles
-            : ['guest'];
-        return
-            count(array_diff($trackingRoles, $userRoles)) <
-            count($trackingRoles);
+        return !is_user_logged_in();
     }
 
     /**
