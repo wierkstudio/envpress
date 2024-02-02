@@ -83,6 +83,8 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `ADMIN_SUPPORT_NAME` | Support contact name | Empty |
 | `ADMIN_SUPPORT_URL` | Support contact website URL | Empty |
 | `ADMIN_DISPLAY_ENV` | Flag to display the environment type in admin | `false` |
+| `RELEASE_VERSION` | Display version of the release | Empty |
+| `RELEASE_URL` | Website URL of the release | Empty |
 | `SALT_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_SECURE_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_LOGGED_IN_KEY` | Cryptographically strong and random key | `put your uni…` |

@@ -80,7 +80,7 @@ class AdminLayer implements LayerInterface
         add_filter('admin_footer_text', function (string $text): string {
             $facts = [];
 
-            // Prepend support details
+            // Support contact
             $supportName = Env::getString('ADMIN_SUPPORT_NAME', '');
             if ($supportName !== '') {
                 $supportUrl = Env::getString('ADMIN_SUPPORT_URL', '');
@@ -90,9 +90,23 @@ class AdminLayer implements LayerInterface
                     : $supportName;
             }
 
-            // TODO: Prepend release version
+            // Release version
+            $releaseVersion = Env::getString('RELEASE_VERSION', '');
+            if ($releaseVersion !== '') {
+                $releaseHtml = esc_html($releaseVersion);
 
-            // Inject WordPress version
+                // Release URL
+                $releaseUrl = Env::getString('RELEASE_URL', '');
+                if ($releaseUrl !== '') {
+                    $releaseHtml =
+                        "<a href=\"{$releaseUrl}\" target=\"_blank\" " .
+                        "rel=\"noopener\">{$releaseHtml}</a>";
+                }
+
+                $facts[] = "Release {$releaseHtml}";
+            }
+
+            // WordPress version
             $version = get_bloginfo('version', 'display');
             $facts[] = "WordPress {$version}";
 
