@@ -22,27 +22,46 @@ This package is designed to simplify the configuration process and lessen the ma
 
 ## Getting Started
 
-1.  Install the package via Composer:
+1.  Setup Composer based WordPress project:
+
+    The easiest way to do so, is [creating a new Bedrock project](https://roots.io/bedrock/docs/installation/) using Composer:
+
+    ```bash
+    composer create-project roots/bedrock
+    ```
+
+2.  Install this package via Composer:
 
     ```bash
     composer require wierk/envpress
     ```
 
-2.  Set up environment variables:
+3.  Set up environment variables:
 
-    - Configure environment variables in the web server or PHP config (recommended for production)
-    - Add environment variables to a .env file in the root of the project (common for development)
+    Configure environment variables in the web server or PHP config (recommended for production) or, alternatively, add them to a file named .env in the root of the project (common for development).
 
-3.  Update wp-config.php to the following:
+    Minimal set of environment variables to run a WordPress instance:
 
-    ```php
-    <?php
-    require_once dirname(__DIR__) . '/vendor/autoload.php';
-    \EnvPress\EnvPress::createWithDefaults(__DIR__)->bootstrap();
-    require_once ABSPATH . 'wp-settings.php';
+    ```ini
+    WP_HOME      = https://example.com
+    WP_SITEURL   = https://example.com/wp
+    DATABASE_URL = mysql://username:password@hostname:port/database
     ```
 
-    If the [Bedrock folder structure](https://roots.io/bedrock/docs/folder-structure/) is used, it can be configured using the following snippet:
+    Set of env vars providing WordPress salts:
+
+    ```ini
+    SALT_AUTH_KEY         = put your unique phrase here
+    SALT_SECURE_AUTH_KEY  = put your unique phrase here
+    SALT_LOGGED_IN_KEY    = put your unique phrase here
+    SALT_NONCE_KEY        = put your unique phrase here
+    SALT_AUTH_SALT        = put your unique phrase here
+    SALT_SECURE_AUTH_SALT = put your unique phrase here
+    SALT_LOGGED_IN_SALT   = put your unique phrase here
+    SALT_NONCE_SALT       = put your unique phrase here
+    ```
+
+4.  Replace the content of wp-config.php with the following:
 
     ```php
     <?php
@@ -50,6 +69,8 @@ This package is designed to simplify the configuration process and lessen the ma
     \EnvPress\EnvPress::createWithBedrockDefaults(__DIR__)->bootstrap();
     require_once ABSPATH . 'wp-settings.php';
     ```
+
+    Starting from the Bedrock boilerplate, the root config directory may now be removed.
 
 ## Environment Variables
 
@@ -107,20 +128,20 @@ In URLs, if a user name or password contains special characters (`$&+,/:;=?@`), 
 ### Database URL/DSN
 
 ```ini
-DATABASE_URL=mysql://{userName}:{password}@{hostName}:{port}/{name}?ssl-mode=REQUIRED
+DATABASE_URL=mysql://${USER}:${PASS}@${HOST}:${PORT}/${DATABASE}?ssl-mode=REQUIRED
 ```
 
-Parameters:
+Query parameters:
 
 - `ssl-mode` - If set to `REQUIRED`, requires an encrypted connection and fails, if one cannot be established.
 
 ### Mailer URL
 
 ```ini
-MAILER_URL=smtp://{userName}:{password}@{hostName}:{port}
+MAILER_URL=smtp://${USER}:${PASS}@${HOST}:${PORT}?encryption=tls
 ```
 
-Parameters:
+Query parameters:
 
 - `encryption` - Define the encryption to use on the SMTP connection: `tls` (default) or `ssl`.
 - `from` - If present, force the from email address to a specified one, overwriting `MAILER_FROM_ADDRESS`.
