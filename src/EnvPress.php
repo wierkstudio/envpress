@@ -11,9 +11,9 @@ use EnvPress\Layer\DebugLayer;
 use EnvPress\Layer\FeatureLayer;
 use EnvPress\Layer\LayerInterface;
 use EnvPress\Layer\MailLayer;
-use EnvPress\Layer\MarketingLayer;
 use EnvPress\Layer\MultisiteLayer;
 use EnvPress\Layer\SecurityLayer;
+use EnvPress\Layer\TrackingLayer;
 use EnvPress\Util\Env;
 use EnvPress\Util\Plugin;
 
@@ -86,7 +86,7 @@ class EnvPress {
             SecurityLayer::create(),
             MailLayer::create(),
             FeatureLayer::create(),
-            MarketingLayer::create(),
+            TrackingLayer::create(),
             AdminLayer::create()
         ]);
     }

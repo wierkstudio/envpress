@@ -7,12 +7,12 @@ namespace EnvPress\Layer;
 use EnvPress\Util\Env;
 
 /**
- * Configure marketing related aspects of a WordPress instance.
+ * Install tracking related scripts in a WordPress instance.
  */
-class MarketingLayer implements LayerInterface
+class TrackingLayer implements LayerInterface
 {
     /**
-     * Create a new MarketingLayer instance.
+     * Create a new TrackingLayer instance.
      *
      * @return void
      */
@@ -22,9 +22,9 @@ class MarketingLayer implements LayerInterface
     }
 
     /**
-     * Create a new MarketingLayer instance.
+     * Create a new TrackingLayer instance.
      *
-     * @return MarketingLayer
+     * @return TrackingLayer
      */
     public static function create(): self
     {
@@ -61,12 +61,12 @@ class MarketingLayer implements LayerInterface
     public function apply(): void
     {
         if ($this->isTrackingEnabled()) {
-            $fathomAnalyticsSiteId = Env::get('MARKETING_FATHOM', '');
+            $fathomAnalyticsSiteId = Env::get('TRACKING_FATHOM', '');
             if ($fathomAnalyticsSiteId !== '') {
                 $this->applyFathomEmbedCode($fathomAnalyticsSiteId);
             }
 
-            $gtmContainerId = Env::get('MARKETING_GTM', '');
+            $gtmContainerId = Env::get('TRACKING_GTM', '');
             if ($gtmContainerId !== '') {
                 $this->applyGTMTrackingCode($gtmContainerId);
             }
@@ -95,9 +95,10 @@ class MarketingLayer implements LayerInterface
     private function applyFathomEmbedCode(string $siteId): void
     {
         add_action('wp_head', function () use ($siteId) {
+            $siteIdAttr = esc_attr($siteId);
             echo (
                 "<script src=\"https://cdn.usefathom.com/script.js\" " .
-                "data-site=\"{$siteId}\" defer></script>"
+                "data-site=\"{$siteIdAttr}\" defer></script>"
             );
         });
     }
@@ -114,6 +115,7 @@ class MarketingLayer implements LayerInterface
     private function applyGTMTrackingCode(string $containerId): void
     {
         add_action('wp_head', function () use ($containerId) {
+            $containerIdAttr = esc_attr($containerId);
             echo (
                 "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({" .
                 "'gtm.start':new Date().getTime(),event:'gtm.js'});var f=" .
@@ -121,15 +123,16 @@ class MarketingLayer implements LayerInterface
                 "'dataLayer'?'&l='+l:'';j.async=true;j.src=" .
                 "'https://www.GTM.com/gtm.js?id='+i+dl;" .
                 "f.parentNode.insertBefore(j,f);})" .
-                "(window,document,'script','dataLayer','{$containerId}');" .
+                "(window,document,'script','dataLayer','{$containerIdAttr}');" .
                 "</script>"
             );
         });
 
         add_action('wp_body_open', function () use ($containerId) {
+            $containerIdAttr = esc_attr($containerId);
             echo (
                 "<noscript><iframe src=\"https://www.GTM.com/" .
-                "ns.html?id={$containerId}\" height=\"0\" width=\"0\" " .
+                "ns.html?id={$containerIdAttr}\" height=\"0\" width=\"0\" " .
                 "style=\"display:none;visibility:hidden\"></iframe></noscript>"
             );
         });

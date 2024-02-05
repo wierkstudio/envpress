@@ -74,7 +74,7 @@ This package is designed to simplify the configuration process and lessen the ma
 
 ## Environment Variables
 
-EnvPress sets up a WordPress instance using a collection of environment variables, listed in the following table. In cases where an environment variable is absent, the corresponding default value is used. These default values are selected to closely resemble a standard, unmodified WordPress installation to avoid unintentional changes.
+EnvPress sets up a WordPress instance using a collection of environment variables, listed in the following table. In cases where an environment variable is absent, the corresponding default value is used. These default values are selected to closely resemble a standard, unmodified WordPress installation to avoid unintentional changes. Env vars prefixed `APP_` are explicitly reserved for the underlying application and will never be used by this package.
 
 | Environment variable | Comments | Default |
 | ----------- | ----------- | ------- |
@@ -101,11 +101,6 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `MAILER_URL` | SMTP server URL for outgoing mail (see below) | WordPress default |
 | `FEATURE_COMMENTS` | Flag to enable comments and related features | `true` |
 | `FEATURE_OEMBED` | Flag to enable oEmbed and related features | `true` |
-| `ADMIN_SUPPORT_NAME` | Support contact name | Empty |
-| `ADMIN_SUPPORT_URL` | Support contact website URL | Empty |
-| `ADMIN_DISPLAY_ENV` | Flag to display the environment type in admin | `false` |
-| `RELEASE_VERSION` | Display version of the release | Empty |
-| `RELEASE_URL` | Website URL of the release | Empty |
 | `SALT_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_SECURE_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_LOGGED_IN_KEY` | Cryptographically strong and random key | `put your uni…` |
@@ -114,9 +109,14 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `SALT_SECURE_AUTH_SALT` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_LOGGED_IN_SALT` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_NONCE_SALT` | Cryptographically strong and random key | `put your uni…` |
-| `MARKETING_FATHOM` | [Fathom Analytics](https://usefathom.com/) Site id | Empty |
-| `MARKETING_GTM` | [Google Tag Manager](https://marketingplatform.google.com/about/tag-manager/) Container id | Empty |
+| `ADMIN_SUPPORT_NAME` | Support contact name | Empty |
+| `ADMIN_SUPPORT_URL` | Support contact website URL | Empty |
+| `ADMIN_DISPLAY_ENV` | Flag to display the environment type in admin | `false` |
+| `TRACKING_FATHOM` | [Fathom Analytics](https://usefathom.com/) Site id | Empty |
+| `TRACKING_GTM` | [Google Tag Manager](https://marketingplatform.google.com/about/tag-manager/) Container id | Empty |
 | `PLUGIN_ACF_PRO_LICENSE` | License key for [ACF PRO](https://www.advancedcustomfields.com/pro/) | Empty (disabled) |
+| `RELEASE_VERSION` | Display version of the release | Empty |
+| `RELEASE_URL` | Website URL of the release | Empty |
 | `ENVPRESS_TRUSTED_PROXIES` | CSV of trusted proxy addresses | Empty (disabled) |
 
 ## Backing Service URLs
