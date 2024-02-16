@@ -59,13 +59,7 @@ class SecurityLayer implements LayerInterface
     public function apply(): void
     {
         // Hide the exact WordPress version to harden the instance against
-        // automated attacks
-        add_filter('the_generator', '__return_empty_string');
-
-        // Disable XML-RPC endpoint to harden against automated attacks
-        add_filter('xmlrpc_enabled', '__return_false');
-
-        // Without XML-RPC pingbacks are not available. Close them for all posts
-        add_filter('pings_open', '__return_false');
+        // automated attacks targeting specific versions
+        add_filter('the_generator', fn() => 'WordPress');
     }
 }

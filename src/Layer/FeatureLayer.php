@@ -60,6 +60,10 @@ class FeatureLayer implements LayerInterface
      */
     public function apply(): void
     {
+        if (!Env::getBool('FEATURE_XMLRPC')) {
+            $this->disableXMLRPC();
+        }
+
         if (!Env::getBool('FEATURE_COMMENTS', true)) {
             $this->disableComments();
         }
@@ -70,7 +74,19 @@ class FeatureLayer implements LayerInterface
     }
 
     /**
-     * Disable comments and related features.
+     * Disable XML-RPC.
+     *
+     * @return void
+     */
+    private function disableXMLRPC(): void
+    {
+        // Disable XML-RPC endpoint
+        // Hardens against automated attacks
+        add_filter('xmlrpc_enabled', '__return_false');
+    }
+
+    /**
+     * Disable comments, pingbacks, and related features.
      *
      * @return void
      */
@@ -78,6 +94,9 @@ class FeatureLayer implements LayerInterface
     {
         // Close comments on all posts
         add_filter('comments_open', '__return_false');
+
+        // Close pingbacks on all posts
+        add_filter('pings_open', '__return_false');
 
         // Hide existing comments
         add_filter('comments_array', '__return_empty_array');

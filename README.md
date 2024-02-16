@@ -11,8 +11,8 @@ A PHP package streamlining the configuration of modern and secure WordPress inst
 - Gather facts from trusted proxies (e.g. Load Balancers)
 - Attach [backing services](https://www.12factor.net/backing-services) using URLs (e.g. MySQL, SMTP)
 - Configure [Multisite Networks](https://wordpress.org/documentation/article/create-a-network/) using environment variables
-- Use feature flags to disable native WordPress features (e.g. comments, oEmbed)
-- Harden WordPress: Disable file modifications, XML-RPC, and pingbacks, hide exact version
+- Disable native WordPress features using flags (e.g. XML-RPC, comments, oEmbed)
+- Harden WordPress by default: Disable file modifications and hide version
 
 ## Motivation
 
@@ -101,6 +101,7 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `MAILER_URL` | SMTP server URL for outgoing mail (see below) | WordPress default |
 | `FEATURE_COMMENTS` | Flag to enable comments and related features | `true` |
 | `FEATURE_OEMBED` | Flag to enable oEmbed and related features | `true` |
+| `FEATURE_XMLRPC` | Flag to enable XML-RPC (incl. pingbacks) | `true` |
 | `SALT_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_SECURE_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_LOGGED_IN_KEY` | Cryptographically strong and random key | `put your uni…` |

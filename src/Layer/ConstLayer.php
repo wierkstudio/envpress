@@ -115,22 +115,35 @@ class ConstLayer implements LayerInterface
      * Configure WordPress path constants.
      *
      * @return void
+     *
+     * @see https://developer.wordpress.org/reference/functions/wp_plugin_directory_constants/
      */
     private function applyPathsConfig(): void
     {
+        // URL the WordPress instance can be reached at
         define('WP_HOME', Env::getString('WP_HOME'));
+
+        // URL where WordPress core files reside
         define('WP_SITEURL', Env::getString('WP_SITEURL'));
-        define('WP_CONTENT_DIR', $this->contentPath);
 
         // Derive the content URL from the content path
         $contentUrl =
-            WP_HOME . substr($this->contentPath, strlen($this->instancePath));
+            WP_HOME .
+            substr($this->contentPath, strlen($this->instancePath));
+
+        // Content directory
+        define('WP_CONTENT_DIR', $this->contentPath);
         define('WP_CONTENT_URL', $contentUrl);
 
-        // WP Super Cache
-        $pluginsPath = $this->contentPath . '/plugins';
-        define('WPCACHEHOME', $pluginsPath . '/wp-super-cache/');
+        // Plugin directory
+        define('WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins');
+        define('WP_PLUGIN_URL', WP_CONTENT_URL . '/plugins');
 
+        // "Must Use" plugin directory
+        define('WPMU_PLUGIN_DIR', WP_CONTENT_DIR . '/mu-plugins');
+        define('WPMU_PLUGIN_URL', WP_CONTENT_URL . '/mu-plugins');
+
+        // Absolute path to the WordPress core files
         if (!defined('ABSPATH')) {
             define('ABSPATH', $this->absPath . '/');
         }
@@ -262,5 +275,8 @@ class ConstLayer implements LayerInterface
         if ($acfProLicense !== '') {
             define('ACF_PRO_LICENSE', $acfProLicense);
         }
+
+        // WP Super Cache
+        define('WPCACHEHOME', WP_PLUGIN_DIR . '/wp-super-cache/');
     }
 }
