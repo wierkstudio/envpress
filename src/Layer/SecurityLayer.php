@@ -60,6 +60,6 @@ class SecurityLayer implements LayerInterface
     {
         // Hide the exact WordPress version to harden the instance against
         // automated attacks targeting specific versions
-        add_filter('the_generator', fn() => 'WordPress');
+        add_filter('the_generator', '__return_empty_string');
     }
 }
