@@ -60,29 +60,21 @@ class FeatureLayer implements LayerInterface
      */
     public function apply(): void
     {
-        if (!Env::getBool('FEATURE_XMLRPC')) {
-            $this->disableXMLRPC();
-        }
-
         if (!Env::getBool('FEATURE_COMMENTS', true)) {
             $this->disableComments();
+        }
+
+        if (!Env::getBool('FEATURE_EMOJI', true)) {
+            $this->disableEmoji();
         }
 
         if (!Env::getBool('FEATURE_OEMBED', true)) {
             $this->disableOembed();
         }
-    }
 
-    /**
-     * Disable XML-RPC.
-     *
-     * @return void
-     */
-    private function disableXMLRPC(): void
-    {
-        // Disable XML-RPC endpoint
-        // Hardens against automated attacks
-        add_filter('xmlrpc_enabled', '__return_false');
+        if (!Env::getBool('FEATURE_XMLRPC')) {
+            $this->disableXMLRPC();
+        }
     }
 
     /**
@@ -123,6 +115,45 @@ class FeatureLayer implements LayerInterface
     }
 
     /**
+     * Disable support for emojis in older browsers.
+     *
+     * @return void
+     */
+    private function disableEmoji(): void
+    {
+        // Remove native emoji related hooks and filters
+        add_action('init', function () {
+            remove_action('admin_print_scripts', 'print_emoji_detection_script');
+            remove_action('admin_print_styles', 'print_emoji_styles');
+            remove_action('wp_head', 'print_emoji_detection_script', 7);
+            remove_action('wp_print_styles', 'print_emoji_styles');
+            remove_filter('comment_text_rss', 'wp_staticize_emoji');
+            remove_filter('the_content_feed', 'wp_staticize_emoji');
+            remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+        });
+
+        // Remove resource hints related to emoji support
+        add_filter('wp_resource_hints', function ($urls, $relationType) {
+            if (is_array($urls) && $relationType === 'dns-prefetch') {
+                $emojiUrlPrefix = 'https://s.w.org/images/core/emoji/';
+                $urls = array_filter(
+                    $urls,
+                    fn($url) => !str_starts_with($url, $emojiUrlPrefix)
+                );
+            }
+            return $urls;
+        }, 10, 2);
+
+        // Disable emoji plugin for TinyMCE
+        add_filter('tiny_mce_plugins', function ($plugins) {
+            if (is_array($plugins)) {
+                return array_diff($plugins, ['wpemoji']);
+            }
+            return $plugins;
+        });
+    }
+
+    /**
      * Disable oEmbed and related features.
      *
      * @return void
@@ -140,5 +171,17 @@ class FeatureLayer implements LayerInterface
 
         // Disable oEmbed related JavaScript from frontend and backend
         remove_action('wp_head', 'wp_oembed_add_host_js');
+    }
+
+    /**
+     * Disable XML-RPC.
+     *
+     * @return void
+     */
+    private function disableXMLRPC(): void
+    {
+        // Disable XML-RPC endpoint
+        // Hardens against automated attacks
+        add_filter('xmlrpc_enabled', '__return_false');
     }
 }

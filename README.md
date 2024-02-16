@@ -99,9 +99,10 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `MAILER_FROM_ADDRESS` | Sender email address (may be set in `MAILER_URL`) | WordPress default |
 | `MAILER_FROM_NAME` | Sender name | WordPress default |
 | `MAILER_URL` | SMTP server URL for outgoing mail (see below) | WordPress default |
-| `FEATURE_COMMENTS` | Flag to enable comments and related features | `true` |
-| `FEATURE_OEMBED` | Flag to enable oEmbed and related features | `true` |
-| `FEATURE_XMLRPC` | Flag to enable XML-RPC (incl. pingbacks) | `true` |
+| `FEATURE_COMMENTS` | Enable comments and related features | `true` |
+| `FEATURE_EMOJI` | Enable support for emojis in older browsers | `true` |
+| `FEATURE_OEMBED` | Enable oEmbed and related features | `true` |
+| `FEATURE_XMLRPC` | Enable XML-RPC (incl. pingbacks) | `true` |
 | `SALT_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_SECURE_AUTH_KEY` | Cryptographically strong and random key | `put your uni…` |
 | `SALT_LOGGED_IN_KEY` | Cryptographically strong and random key | `put your uni…` |
