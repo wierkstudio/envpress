@@ -84,6 +84,7 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `WP_DEBUG` | Flag to enable [the reporting of some errors or warnings](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#wp-debug) | `false` |
 | `WP_CACHE` | Flag to enable [advanced-cache.php](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#cache) | `false` |
 | `WP_CRON` | Flag to enable [WP Cron based on page load](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#alternative-cron) | `true` |
+| `WP_FILE_MODS` | Flag to enable [plugin and theme installation/update](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#disable-plugin-and-theme-update-and-installation) | `true` |
 | `WP_DEFAULT_THEME` | Default WordPress theme name | WordPress default |
 | `WP_POST_REVISIONS` | Number of [post revisions](https://wordpress.org/documentation/article/revisions/) (-1, 0, 1, 2, …) | `-1` |
 | `WP_ALLOW_REPAIR` | Flag to enable [automatic database repair support](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#automatic-database-optimizing) | `false` |

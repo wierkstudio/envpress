@@ -234,7 +234,7 @@ class ConstLayer implements LayerInterface
         define('WP_AUTO_UPDATE_CORE', false);
         define('AUTOMATIC_UPDATER_DISABLED', true);
         define('DISALLOW_FILE_EDIT', true);
-        define('DISALLOW_FILE_MODS', true);
+        define('DISALLOW_FILE_MODS', !Env::getBool('WP_FILE_MODS', true));
         define('FS_METHOD', 'direct');
         define('ALLOW_UNFILTERED_UPLOADS', false);
 
