@@ -114,6 +114,7 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `SALT_NONCE_SALT` | Cryptographically strong and random key | `put your uni…` |
 | `ADMIN_SUPPORT_NAME` | Support contact name | Empty |
 | `ADMIN_SUPPORT_URL` | Support contact website URL | Empty |
+| `ADMIN_DASHBOARD_DISABLE` | CSV of dashboard widget ids to be disabled | Empty |
 | `ADMIN_DISPLAY_ENV` | Flag to display the environment type in admin | `false` |
 | `TRACKING_FATHOM` | [Fathom Analytics](https://usefathom.com/) Site id | Empty |
 | `TRACKING_GTM` | [Google Tag Manager](https://marketingplatform.google.com/about/tag-manager/) Container id | Empty |

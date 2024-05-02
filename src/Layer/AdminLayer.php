@@ -66,6 +66,17 @@ class AdminLayer implements LayerInterface
         if ($envDisplay) {
             $this->applyDisplayEnv();
         }
+
+        $idsString = Env::getString('ADMIN_DASHBOARD_DISABLE', '');
+        if (!empty($idsString)) {
+            $ids = explode(',', strtolower($idsString));
+            add_action('wp_dashboard_setup', function () use ($ids) {
+                $this->disableDashboardWidgets('dashboard', $ids);
+            });
+            add_action('wp_network_dashboard_setup', function () use ($ids) {
+                $this->disableDashboardWidgets('dashboard-network', $ids);
+            });
+        }
     }
 
     /**
@@ -163,5 +174,27 @@ class AdminLayer implements LayerInterface
                 ],
             ]);
         }, 1);
+    }
+
+    /**
+     * Disable admin screen widgets by the given ids.
+     *
+     * @param string $screen Screen id
+     * @param array $ids Array of meta box ids
+     *
+     * @return void
+     */
+    private function disableDashboardWidgets(string $screen, array $ids): void
+    {
+        global $wp_meta_boxes;
+        foreach ($ids as $id) {
+            foreach (['normal', 'side', 'column3', 'column4'] as $context) {
+                foreach (['high', 'core', 'default', 'low'] as $prio) {
+                    if (!empty($wp_meta_boxes[$screen][$context][$prio][$id])) {
+                        remove_meta_box($id, $screen, $context);
+                    }
+                }
+            }
+        }
     }
 }
