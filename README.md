@@ -11,6 +11,7 @@ A PHP package streamlining the configuration of modern and secure WordPress inst
 - Gather facts from trusted proxies (e.g. Load Balancers)
 - Attach [backing services](https://www.12factor.net/backing-services) using URLs (e.g. MySQL, SMTP)
 - Configure [Multisite Networks](https://wordpress.org/documentation/article/create-a-network/) using environment variables
+- Apply role and capability changes based on env vars
 - Disable native WordPress features using flags (e.g. XML-RPC, comments, oEmbed)
 - Harden WordPress by default: Disable file modifications and hide version
 
@@ -88,6 +89,7 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `WP_DEFAULT_THEME` | Default WordPress theme name | WordPress default |
 | `WP_POST_REVISIONS` | Number of [post revisions](https://wordpress.org/documentation/article/revisions/) (-1, 0, 1, 2, …) | `-1` |
 | `WP_ALLOW_REPAIR` | Flag to enable [automatic database repair support](https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#automatic-database-optimizing) | `false` |
+| `WP_ROLES_PATCH` | JSON-encoded set of [role and capability](https://wordpress.org/documentation/article/roles-and-capabilities/) changes | No changes |
 | `MULTISITE_ALLOW` | Flag to allow a [multisite network](https://wordpress.org/documentation/article/create-a-network/) | `false` |
 | `MULTISITE_ENABLE` | Flag to enable a multisite network, once installed | `false` |
 | `MULTISITE_TYPE` | Either `subdomains` or `subdirectories` | `subdirectories` |
@@ -123,7 +125,7 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `RELEASE_URL` | Website URL of the release | Empty |
 | `ENVPRESS_TRUSTED_PROXIES` | CSV of trusted proxy addresses | Empty (disabled) |
 
-## Backing Service URLs
+## Connect Backing Services via URLs
 
 Backing services such as databases, caching systems, or SMTP servers are attached using URLs. These URLs consolidate all the essential connection details, like host name, port, access credentials, and other relevant parameters, into a singular, manageable string.
 
@@ -149,6 +151,26 @@ Query parameters:
 
 - `encryption` - Define the encryption to use on the SMTP connection: `tls` (default) or `ssl`.
 - `from` - If present, force the from email address to a specified one, overwriting `MAILER_FROM_ADDRESS`.
+
+## Patching Roles and Capabilities
+
+The `WP_ROLES_PATCH` environment variable allows role and capability changes to be defined using a JSON-encoded structure. Each top-level key is a role name, and each value describes changes for that role. Patches are applied only once per unique configuration using an internal hash.
+
+Supported role object attributes:
+
+- `display_name` - Optional display name used when creating a new role (see [add_role](https://developer.wordpress.org/reference/functions/add_role/))
+- `add_cap` - Capability or array of capabilities to add and grant (see [WP_Role::add_cap](https://developer.wordpress.org/reference/classes/wp_role/add_cap/))
+- `remove_cap` - Capability or array of capabilities to remove (see [WP_Role::remove_cap](https://developer.wordpress.org/reference/classes/wp_role/remove_cap/))
+- `deny_cap` - Capability or array of capabilities to add and explicitly deny (relevant for multi-role users)
+- `remove_role` - Set to `true` to delete the role entirely (see [remove_role](https://developer.wordpress.org/reference/functions/remove_role/))
+
+Example:
+
+```ini
+WP_ROLES_PATCH={"editor":{"add_cap":["create_users","list_users"],"remove_cap":"delete_users"},"unused":{"remove_role":true}}
+```
+
+This adds the capabilities `create_users` and `list_users` to the `editor` role, removes `delete_users`, and deletes the `unused` role.
 
 ## Credits
 

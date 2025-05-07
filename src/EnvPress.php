@@ -12,6 +12,7 @@ use EnvPress\Layer\FeatureLayer;
 use EnvPress\Layer\LayerInterface;
 use EnvPress\Layer\MailLayer;
 use EnvPress\Layer\MultisiteLayer;
+use EnvPress\Layer\RolesLayer;
 use EnvPress\Layer\SecurityLayer;
 use EnvPress\Layer\TrackingLayer;
 use EnvPress\Util\Env;
@@ -84,6 +85,7 @@ class EnvPress {
             MultisiteLayer::create($instancePath),
             DebugLayer::create(),
             SecurityLayer::create(),
+            RolesLayer::create(),
             MailLayer::create(),
             FeatureLayer::create(),
             TrackingLayer::create(),

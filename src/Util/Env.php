@@ -81,6 +81,37 @@ final class Env
     }
 
     /**
+     * Return a JSON string environment variable.
+     *
+     * @param string $key Key of environment variable
+     * @param mixed $default Fallback value, if not present
+     *
+     * @return mixed
+     * @throws InvalidEnvVarException
+     */
+    public static function getJson(string $key, $default = null)
+    {
+        $value = self::get($key, null);
+        if ($value === null) {
+            return $default;
+        }
+
+        if (is_string($value)) {
+            $decodedValue = @json_decode($value, true);
+            if (
+                $decodedValue !== null ||
+                json_last_error() === JSON_ERROR_NONE
+            ) {
+                return $decodedValue;
+            }
+        }
+
+        throw new InvalidEnvVarException(
+            "Env var {$key} is expected to contain a JSON string"
+        );
+    }
+
+    /**
      * Return an int environment variable.
      *
      * @param string $key Key of environment variable
