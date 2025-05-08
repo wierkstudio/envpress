@@ -9,6 +9,8 @@ use EnvPress\Util\Env;
 
 /**
  * Apply role and capability changes to WordPress.
+ *
+ * Must be applied after the MultisiteLayer.
  */
 class RolesLayer implements LayerInterface
 {
@@ -68,20 +70,57 @@ class RolesLayer implements LayerInterface
      */
     public function apply(): void
     {
-        $rawRolePatches = Env::getString(self::ENV_VAR_KEY, '');
-        if (!empty($rawRolePatches)) {
-            $version = sha1($rawRolePatches);
+        $rolesPatch = Env::getString(self::ENV_VAR_KEY, '');
+        if (empty($rolesPatch)) {
+            return;
+        }
 
-            $appliedVersion = get_option(self::ROLES_PATCH_VERSION_OPTION, '');
-            if ($appliedVersion !== $version) {
-                $rolePatches = Env::getJson(self::ENV_VAR_KEY, []);
-                foreach ($rolePatches as $name => $rolePatch) {
-                    $this->applyRolePatch($name, $rolePatch);
-                }
+        // Use the SHA1 hash of the env var value as a version
+        $version = sha1($rolesPatch);
 
-                // Autoload the roles patch version for improved performance
-                update_option(self::ROLES_PATCH_VERSION_OPTION, $version, true);
+        if (!is_multisite()) {
+            $this->applyRolesPatch($rolesPatch, $version);
+        } else {
+            $sites = get_sites([
+                'fields' => 'ids',
+                // The magic -1 does not appear to work here
+                'number' => 1024,
+            ]);
+            foreach ($sites as $blogId) {
+                switch_to_blog($blogId);
+                $this->applyRolesPatch($rolesPatch, $version);
+                restore_current_blog();
             }
+        }
+    }
+
+    /**
+     * Apply the configuration of this layer to the current site.
+     *
+     * @return void
+     */
+    private function applyRolesPatch(string $rolesPatch, string $version): void
+    {
+        // Note that `get_option` and `update_option` are site-specific
+        $appliedVersion = get_option(self::ROLES_PATCH_VERSION_OPTION, '');
+        if ($appliedVersion !== $version) {
+            $rolePatches = @json_decode($rolesPatch, true);
+
+            if (
+                json_last_error() !== JSON_ERROR_NONE ||
+                !is_array($rolePatches)
+            ) {
+                throw new InvalidEnvVarException(
+                    'Env var ' . self::ENV_VAR_KEY . ' contains unexpected JSON'
+                );
+            }
+
+            foreach ($rolePatches as $name => $rolePatch) {
+                $this->applyRolePatch($name, $rolePatch);
+            }
+
+            // Autoload the roles patch version for improved performance
+            update_option(self::ROLES_PATCH_VERSION_OPTION, $version, true);
         }
     }
 
