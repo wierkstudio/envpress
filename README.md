@@ -174,15 +174,13 @@ This adds the capabilities `create_users` and `list_users` to the `editor` role,
 
 ## Configure Error Reporting with Sentry
 
-Sign up for a [Sentry account](https://sentry.io/) and create a project to obtain a Sentry DSN for the `SERVICE_SENTRY_DSN` environment variable.
+Sign up for a [Sentry account](https://sentry.io/) and create a project to obtain a Sentry DSN. To enable frontend error reporting, provide the DSN in the `SERVICE_SENTRY_DSN` environment variable.
 
-The Sentry SDK is only loaded by this package if available. Install the [Sentry SDK for PHP](https://github.com/getsentry/sentry-php) using Composer:
+Sentry is treated as a **peer dependency**: This package will use it if available but won’t install it for you. To activate Sentry error reporting for PHP, install the [Sentry SDK for PHP](https://github.com/getsentry/sentry-php) via Composer:
 
 ```bash
 composer require sentry/sentry:^4.0
 ```
-
-Once configured, frontend and backend errors will be automatically reported to Sentry.
 
 ## Credits
 
