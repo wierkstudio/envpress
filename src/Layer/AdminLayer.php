@@ -62,6 +62,8 @@ class AdminLayer implements LayerInterface
     {
         $this->applyFooterText();
 
+        add_filter('plugins_list', [$this, 'filterPluginsList']);
+
         $envDisplay = Env::getBool('ADMIN_DISPLAY_ENV', false);
         if ($envDisplay) {
             $this->applyDisplayEnv();
@@ -196,5 +198,42 @@ class AdminLayer implements LayerInterface
                 }
             }
         }
+    }
+
+    /**
+     * Filter the plugins list to document the package as an active
+     * must-use plugin.
+     *
+     * @param array $plugins
+     *
+     * @return array
+     */
+    public function filterPluginsList(array $plugins): array
+    {
+        if (!empty($plugins['mustuse'])) {
+            $plugins['mustuse']['envpress'] = [
+                'Name' => 'EnvPress',
+                'PluginURI' => 'https://github.com/wierkstudio/envpress',
+                'Version' => '',
+                'Description' =>
+                    'A PHP package streamlining the configuration of modern ' .
+                    'and secure WordPress instances using a standard set of ' .
+                    'environment variables. ' .
+                    'Loaded via <code>wp-config.php</code>.',
+                'Author' => 'Wierk',
+                'AuthorURI' =>
+                    'https://wierk.lu/?utm_source=envpress&utm_medium=referral&utm_campaign=open_source_projects',
+                'TextDomain' => '',
+                'DomainPath' => '',
+                'Network' => false,
+                'RequiresWP' => '',
+                'RequiresPHP' => '',
+                'UpdateURI' => '',
+                'RequiresPlugins' => '',
+                'Title' => 'EnvPress',
+                'AuthorName' => 'Wierk',
+            ];
+        }
+        return $plugins;
     }
 }

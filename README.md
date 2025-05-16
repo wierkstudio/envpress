@@ -184,4 +184,4 @@ composer require sentry/sentry:^4.0
 
 ## Credits
 
-Created and maintained by [Wierk](https://wierk.lu/) and [contributors](https://github.com/wierkstudio/envpress/graphs/contributors). Released under the [MIT license](./LICENSE.txt).
+Created and maintained by [Wierk](https://wierk.lu/?utm_source=envpress&utm_medium=referral&utm_campaign=open_source_projects) and [contributors](https://github.com/wierkstudio/envpress/graphs/contributors). Released under the [MIT license](./LICENSE.txt).
