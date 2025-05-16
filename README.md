@@ -1,4 +1,3 @@
-
 # EnvPress
 
 A PHP package streamlining the configuration of modern and secure WordPress instances using a standard set of environment variables.
@@ -120,6 +119,7 @@ EnvPress sets up a WordPress instance using a collection of environment variable
 | `ADMIN_DISPLAY_ENV` | Flag to display the environment type in admin | `false` |
 | `TRACKING_FATHOM` | [Fathom Analytics](https://usefathom.com/) Site id | Empty |
 | `TRACKING_GTM` | [Google Tag Manager](https://marketingplatform.google.com/about/tag-manager/) Container id | Empty |
+| `SERVICE_SENTRY_DSN` | DSN for error reporting with [Sentry](https://sentry.io/) | Not used |
 | `PLUGIN_ACF_PRO_LICENSE` | License key for [ACF PRO](https://www.advancedcustomfields.com/pro/) | Empty (disabled) |
 | `RELEASE_VERSION` | Display version of the release | Empty |
 | `RELEASE_URL` | Website URL of the release | Empty |
@@ -154,7 +154,7 @@ Query parameters:
 
 ## Patching Roles and Capabilities
 
-The `WP_ROLES_PATCH` environment variable allows role and capability changes to be defined using a JSON-encoded structure. Each top-level key is a role name, and each value describes changes for that role. Patches are applied only once per unique configuration using an internal hash.
+The `WP_ROLES_PATCH` environment variable allows role and capability changes to be defined using a JSON-encoded structure. Each top-level key is a role name, and each value describes changes for that role. Patches are applied only once per unique configuration using an internal hash that is stored in `wp_options`. In a multisite network, changes are applied to each site.
 
 Supported role object attributes:
 
@@ -171,6 +171,18 @@ WP_ROLES_PATCH={"editor":{"add_cap":["create_users","list_users"],"remove_cap":"
 ```
 
 This adds the capabilities `create_users` and `list_users` to the `editor` role, removes `delete_users`, and deletes the `unused` role.
+
+## Configure Error Reporting with Sentry
+
+Sign up for a [Sentry account](https://sentry.io/) and create a project to obtain a Sentry DSN for the `SERVICE_SENTRY_DSN` environment variable.
+
+The Sentry SDK is only loaded by this package if available. Install the [Sentry SDK for PHP](https://github.com/getsentry/sentry-php) using Composer:
+
+```bash
+composer require sentry/sentry:^4.0
+```
+
+Once configured, frontend and backend errors will be automatically reported to Sentry.
 
 ## Credits
 

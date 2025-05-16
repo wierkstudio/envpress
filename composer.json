@@ -12,6 +12,12 @@
             "EnvPress\\": "src/"
         }
     },
+    "require-dev": {
+        "sentry/sentry": "^4.0"
+    },
+    "suggest": {
+        "sentry/sentry": "^4.0"
+    },
     "authors": [
         {
             "name": "Fränz Friederes",

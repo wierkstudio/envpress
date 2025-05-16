@@ -14,6 +14,7 @@ use EnvPress\Layer\MailLayer;
 use EnvPress\Layer\MultisiteLayer;
 use EnvPress\Layer\RolesLayer;
 use EnvPress\Layer\SecurityLayer;
+use EnvPress\Layer\SentryLayer;
 use EnvPress\Layer\TrackingLayer;
 use EnvPress\Util\Env;
 use EnvPress\Util\Plugin;
@@ -77,6 +78,8 @@ class EnvPress {
     ): self
     {
         return new self($dotEnvPath, [
+            // Configure error reporting as soon as possible
+            SentryLayer::create(),
             ConstLayer::create(
                 $instancePath,
                 $absPath,
